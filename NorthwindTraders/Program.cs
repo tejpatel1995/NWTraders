@@ -29,9 +29,9 @@ namespace NorthwindTraders
                     if (answer == "1")
                     {
                         var db = new NWTradersContext();
-                        var query = db.Categories.OrderBy(p => p.CategoryName);
+                        var query = db.Categories.OrderBy(p => p.CategoryId);
 
-                        Console.WriteLine($"{query.Count()} Categories:");
+                        Console.WriteLine($"Categories:");
                         foreach (var item in query)
                         {
                             Console.WriteLine($"{item.CategoryName}: {item.Description}");
@@ -40,7 +40,7 @@ namespace NorthwindTraders
                     if (answer == "2")
                     {
                         var db = new NWTradersContext();
-                        var query = db.Categories.OrderBy(p => p.CategoryName);
+                        var query = db.Categories.OrderBy(p => p.CategoryId);
                         Console.Write("Enter a name for a new Category: ");
                         var name = Console.ReadLine();
                         Console.WriteLine("Enter the Category Description:");
@@ -69,9 +69,9 @@ namespace NorthwindTraders
                     {
                         Console.WriteLine("Choose the cateogry to edit:");
                         var db = new NWTradersContext();
-                        var query = db.Categories.OrderBy(p => p.CategoryName);
+                        var query = db.Categories.OrderBy(p => p.CategoryId);
 
-                        Console.WriteLine($"{query.Count()} Categories:");
+                        Console.WriteLine($"Categories:");
                         foreach (var item in query)
                         {
                             Console.WriteLine($"{item.CategoryId}. {item.CategoryName}: {item.Description}");
@@ -153,9 +153,9 @@ namespace NorthwindTraders
                             continue;
                         }
                         var db = new NWTradersContext();
-                        var query = db.Categories.OrderBy(p => p.CategoryName);
+                        var query = db.Categories.OrderBy(p => p.CategoryId);
 
-                        Console.WriteLine($"{query.Count()} Categories:");
+                        Console.WriteLine($"Categories:");
                         foreach (var item in query)
                         {
                             Console.WriteLine($"{item.CategoryId}. {item.CategoryName}: {item.Description}");
@@ -182,7 +182,7 @@ namespace NorthwindTraders
 
                         var query2 = db.Suppliers.OrderBy(p => p.SupplierID);
 
-                        Console.WriteLine($"{query2.Count()} Suppliers:");
+                        Console.WriteLine($"Suppliers:");
                         foreach (var item in query2)
                         {
                             Console.WriteLine($"{item.SupplierID}. {item.CompanyName}");
@@ -213,9 +213,9 @@ namespace NorthwindTraders
                     {
                         var db = new NWTradersContext();
                         Console.WriteLine("Which category is your product in?");
-                        var query = db.Categories.OrderBy(p => p.CategoryName);
+                        var query = db.Categories.OrderBy(p => p.CategoryId);
 
-                        Console.WriteLine($"{query.Count()} Categories:");
+                        Console.WriteLine($"Categories:");
                         foreach (var item in query)
                         {
                             Console.WriteLine($"{item.CategoryId}. {item.CategoryName}: {item.Description}");
@@ -286,9 +286,9 @@ namespace NorthwindTraders
                                             logger.Error("Invalid Discontinued? Entry");
                                             continue;
                                         }
-                                        var query3 = db.Categories.OrderBy(p => p.CategoryName);
+                                        var query3 = db.Categories.OrderBy(p => p.CategoryId);
 
-                                        Console.WriteLine($"{query3.Count()} Categories:");
+                                        Console.WriteLine($"Categories:");
                                         foreach (var item in query3)
                                         {
                                             Console.WriteLine($"{item.CategoryId}. {item.CategoryName}: {item.Description}");
@@ -315,7 +315,7 @@ namespace NorthwindTraders
 
                                         var query4 = db.Suppliers.OrderBy(p => p.SupplierID);
 
-                                        Console.WriteLine($"{query4.Count()} Suppliers:");
+                                        Console.WriteLine($"Suppliers:");
                                         foreach (var item in query4)
                                         {
                                             Console.WriteLine($"{item.SupplierID}. {item.CompanyName}");
@@ -359,11 +359,40 @@ namespace NorthwindTraders
                     if (answer == "6")
                     {
                         var db = new NWTradersContext();
-                        var query = db.Products.OrderBy(p => p.ProductID);
-                        foreach (var item in query)
+                        Console.WriteLine("What would you like to see?\n1. All Products\n2. Discontinued Products\n3. Active Products");
+                        string productType = Console.ReadLine();
+                        if (productType == "1")
                         {
-                            Console.WriteLine($"{item.ProductID}. {item.ProductName}");
+                            var query = db.Products.OrderBy(p => p.ProductID);
+                            Console.WriteLine("All Products: ");
+                            foreach (var item in query)
+                            {
+                                Console.WriteLine($"{item.ProductID}. {item.ProductName}");
+                            }
                         }
+                        else if (productType == "2")
+                        {
+                            var query = db.Products.Where(p => p.Discontinued == true).OrderBy(p => p.ProductID);
+                            Console.WriteLine("Discontinued Products: ");
+                            foreach (var item in query)
+                            {
+                                Console.WriteLine($"{item.ProductID}. {item.ProductName}");
+                            }
+                        }
+                        else if (productType == "3")
+                        {
+                            Console.WriteLine("Active Products: ");
+                            var query = db.Products.Where(p => p.Discontinued == false).OrderBy(p => p.ProductID);
+                            foreach (var item in query)
+                            {
+                                Console.WriteLine($"{item.ProductID}. {item.ProductName}");
+                            }
+                        }
+                        else
+                        {
+                            logger.Error("Invalid Product Type Entry");
+                        }
+
                     }
                     if (answer == "7")
                     {
@@ -396,7 +425,7 @@ namespace NorthwindTraders
                     if (answer == "8")
                     {
                         var db = new NWTradersContext();
-                        var query = db.Categories.OrderBy(p => p.CategoryName).Include(p => p.Products);
+                        var query = db.Categories.OrderBy(p => p.CategoryId).Include(p => p.Products);
 
                         Console.WriteLine("Which category is your product in?");
                         Console.WriteLine($"Categories:");
@@ -422,9 +451,9 @@ namespace NorthwindTraders
                     if (answer == "9")
                     {
                         var db = new NWTradersContext();
-                        var query = db.Categories.OrderBy(p => p.CategoryName).Include(p => p.Products);
+                        var query = db.Categories.OrderBy(p => p.CategoryId).Include(p => p.Products);
 
-                        Console.WriteLine($"{query.Count()} Categories:");
+                        Console.WriteLine($"Categories:");
                         foreach (var item in query)
                         {
                             Console.WriteLine($"{item.CategoryName}: {item.Description}");
